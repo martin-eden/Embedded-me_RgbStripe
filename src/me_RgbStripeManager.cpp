@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-12
+  Last mod.: 2024-09-15
 */
 
 #include "me_RgbStripeManager.h"
@@ -12,23 +12,19 @@ using
   me_Ws2812b::TPixel;
 
 // Initialize and reset
-void TRgbStripeManager::Init(
-  TUint_1 OutputPin,
-  TUint_2 StripeLength
+TBool TRgbStripeManager::Init(
+  TUint_1 OutputPin_arg,
+  TUint_2 StripeLength_arg
 )
 {
-  TUint_1 DefaultOutputPin = A0;
-  TUint_2 DefaultStripeLength = 60;
+  OutputPin = OutputPin_arg;
 
-  if (!SetOutputPin(OutputPin))
-    SetOutputPin(DefaultOutputPin);
-
-  TUint_2 MaxIndex = StripeLength - 1;
-  if (!CheckIndex(MaxIndex))
-    StripeLength = DefaultStripeLength;
-  this->StripeLength = StripeLength;
+  if (!SetStripeLength(StripeLength_arg))
+    return false;
 
   Reset();
+
+  return true;
 }
 
 // Set pixels to initial state
@@ -36,7 +32,7 @@ void TRgbStripeManager::Reset()
 {
   TPixel InitPixel = { .Green = 0, .Red = 0, .Blue = 0 };
 
-  for (TUint_1 Index = 0; Index < this->StripeLength; ++Index)
+  for (TUint_1 Index = 0; Index < StripeLength; ++Index)
     SetPixel(Index, InitPixel);
 
   Display();
@@ -47,7 +43,7 @@ void TRgbStripeManager::Display()
 {
   me_Ws2812b::TLedStripeState StripeState;
 
-  StripeState.Pixels = Pixels;
+  StripeState.Pixels = (me_Ws2812b::TPixel *) PixelsMem.Start.Addr;
   StripeState.Length = StripeLength;
   StripeState.Pin = OutputPin;
 
@@ -63,6 +59,10 @@ TBool TRgbStripeManager::SetPixel(
   if (!CheckIndex(Index))
     return false;
 
+  using me_Ws2812b::TPixel;
+
+  TPixel * Pixels = (TPixel *) PixelsMem.Start.Addr;
+
   Pixels[Index] = Color;
 
   return true;
@@ -76,6 +76,10 @@ TBool TRgbStripeManager::GetPixel(
 {
   if (!CheckIndex(Index))
     return false;
+
+  using me_Ws2812b::TPixel;
+
+  TPixel * Pixels = (TPixel *) PixelsMem.Start.Addr;
 
   *Color = Pixels[Index];
 
@@ -110,24 +114,58 @@ TBool TRgbStripeManager::CheckIndex(TUint_2 Index)
   return (Index <= StripeLength - 1);
 }
 
-// [maintenance] Set output pin
-TBool TRgbStripeManager::SetOutputPin(TUint_1 Pin)
+// [maintenance] Set stripe length and allocate memory for pixels
+TBool TRgbStripeManager::SetStripeLength(TUint_2 StripeLength_arg)
 {
-  // We can check for valid pin here if we want to
+  StripeLength = StripeLength_arg;
 
-  OutputPin = Pin;
+  if (!ReservePixelsMem(StripeLength))
+  {
+    /*
+      No memory for pixels block of our length.
+      We will set stripe length to zero.
+    */
+    StripeLength = 0;
+
+    return false;
+  }
 
   return true;
 }
 
-// [maintenance] Get output pin
-TUint_1 TRgbStripeManager::GetOutputPin()
+// [maintenance] Get stripe length
+TUint_2 TRgbStripeManager::GetStripeLength()
 {
-  return OutputPin;
+  return StripeLength;
+}
+
+/*
+  [maintenance] Reserve memory for pixels
+
+  Previous memory segment is released.
+
+  If memory cannot be allocated, return false.
+*/
+TBool TRgbStripeManager::ReservePixelsMem(TUint_2 NumPixels)
+{
+  /*
+    If you try to allocate already busy TMemorySegment, Reserve() will
+    just return false.
+
+    However, it is safe to call Release() before Reserve().
+
+    If the segment is already free, Release() will just return false.
+  */
+  PixelsMem.Release();
+
+  TUint_2 PixelsMemSize = NumPixels * sizeof(me_Ws2812b::TPixel);
+
+  return PixelsMem.Reserve(PixelsMemSize);
 }
 
 // )
 
 /*
   2024-09-12
+  2024-09-12 Memory management
 */

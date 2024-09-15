@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-12
+  Last mod.: 2024-09-15
 */
 
 #include <me_BaseTypes.h>
@@ -35,7 +35,18 @@ void loop()
 // Blink test pattern several times
 void RunTest()
 {
-  StripeManager.Init(A0, 60);
+  TUint_1 OutputPin = A0;
+  TUint_2 StripeLength = 60;
+
+  printf("Output pin is (%u).\n", OutputPin);
+  printf("Stripe length is (%u).\n", StripeLength);
+
+  TBool InitIsDone = StripeManager.Init(OutputPin, StripeLength);
+  if (!InitIsDone)
+  {
+    printf("Initialization failed. No memory for that stripe length?\n");
+    return;
+  }
 
   for (TUint_1 Iteration = 1; Iteration < 5; ++Iteration)
   {
@@ -49,4 +60,5 @@ void RunTest()
 
 /*
   2024-09-12
+  2024-09-15
 */
