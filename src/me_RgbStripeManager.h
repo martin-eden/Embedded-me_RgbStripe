@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-12
+  Last mod.: 2024-09-15
 */
 
 /*
@@ -10,7 +10,7 @@
   function. Function argument is state: pin, length and pixels.
 
   For more high-level code I want intermediate level that is class with
-  some common-sense methods.
+  own memory and some common-sense methods.
 
   Here it is.
 */
@@ -18,9 +18,8 @@
 #pragma once
 
 #include <me_BaseTypes.h>
+#include <me_ManagedMemory.h>
 #include <me_Ws2812b.h>
-
-#include <Arduino.h> // pin A0
 
 namespace me_RgbStripeManager
 {
@@ -30,17 +29,22 @@ namespace me_RgbStripeManager
     private:
       TUint_1 OutputPin;
       TUint_2 StripeLength;
-      me_Ws2812b::TPixel Pixels[60]; // fuck this, I'm sketching!
+      me_ManagedMemory::TManagedMemory PixelsMem;
+
       // [maintenance] Check index
       TBool CheckIndex(TUint_2 Index);
-      // [maintenance] Set output pin
-      TBool SetOutputPin(TUint_1 Pin);
-      // [maintenance] Get output pin
-      TUint_1 GetOutputPin();
+
+      // [maintenance] Set stripe length
+      TBool SetStripeLength(TUint_2 StripeLength);
+      // [maintenance] Get stripe length
+      TUint_2 GetStripeLength();
+
+      // [maintenance] Allocate memory for pixels
+      TBool ReservePixelsMem(TUint_2 NumPixels);
 
     public:
       // Init and reset
-      void Init(TUint_1 OutputPin, TUint_2 StripeLength);
+      TBool Init(TUint_1 OutputPin, TUint_2 StripeLength);
 
       // Reset - make pixels black
       void Reset();
@@ -61,4 +65,5 @@ namespace me_RgbStripeManager
 
 /*
   2024-09-12
+  2024-09-15 Memory management
 */
