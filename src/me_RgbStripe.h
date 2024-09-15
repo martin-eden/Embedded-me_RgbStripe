@@ -21,29 +21,24 @@
 #include <me_ManagedMemory.h>
 #include <me_Ws2812b.h>
 
-namespace me_RgbStripeManager
+namespace me_RgbStripe
 {
   // RGB stripe manager
-  class TRgbStripeManager
+  class TRgbStripe
   {
     private:
       TUint_1 OutputPin;
-      TUint_2 StripeLength;
+      TUint_2 Length;
       me_ManagedMemory::TManagedMemory PixelsMem;
 
       // [maintenance] Check index
       TBool CheckIndex(TUint_2 Index);
 
-      // [maintenance] Set stripe length
-      TBool SetStripeLength(TUint_2 StripeLength);
-      // [maintenance] Get stripe length
-      TUint_2 GetStripeLength();
-
       // [maintenance] Allocate memory for pixels
       TBool ReservePixelsMem(TUint_2 NumPixels);
 
     public:
-      // Init and reset
+      // Set output pin and stripe length
       TBool Init(TUint_1 OutputPin, TUint_2 StripeLength);
 
       // Reset - make pixels black
@@ -58,8 +53,10 @@ namespace me_RgbStripeManager
       // Get pixel
       TBool GetPixel(TUint_2 Index, me_Ws2812b::TPixel * Color);
 
-      // Ad hoc visual test to check borders and output pin
-      void Test();
+      // [maintenance] Set stripe length
+      TBool SetLength(TUint_2 StripeLength);
+      // [maintenance] Get stripe length
+      TUint_2 GetLength();
   };
 }
 

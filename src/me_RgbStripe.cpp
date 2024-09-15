@@ -5,21 +5,21 @@
   Last mod.: 2024-09-15
 */
 
-#include "me_RgbStripeManager.h"
+#include "me_RgbStripe.h"
 
 using
-  me_RgbStripeManager::TRgbStripeManager,
+  me_RgbStripe::TRgbStripe,
   me_Ws2812b::TPixel;
 
-// Initialize and reset
-TBool TRgbStripeManager::Init(
+// Set output pin and stripe length
+TBool TRgbStripe::Init(
   TUint_1 OutputPin_arg,
   TUint_2 StripeLength_arg
 )
 {
   OutputPin = OutputPin_arg;
 
-  if (!SetStripeLength(StripeLength_arg))
+  if (!SetLength(StripeLength_arg))
     return false;
 
   Reset();
@@ -28,30 +28,28 @@ TBool TRgbStripeManager::Init(
 }
 
 // Set pixels to initial state
-void TRgbStripeManager::Reset()
+void TRgbStripe::Reset()
 {
   TPixel InitPixel = { .Green = 0, .Red = 0, .Blue = 0 };
 
-  for (TUint_1 Index = 0; Index < StripeLength; ++Index)
+  for (TUint_1 Index = 0; Index < Length; ++Index)
     SetPixel(Index, InitPixel);
-
-  Display();
 }
 
 // Update LED stripe
-void TRgbStripeManager::Display()
+void TRgbStripe::Display()
 {
   me_Ws2812b::TLedStripeState StripeState;
 
   StripeState.Pixels = (me_Ws2812b::TPixel *) PixelsMem.Start.Addr;
-  StripeState.Length = StripeLength;
+  StripeState.Length = Length;
   StripeState.Pin = OutputPin;
 
   me_Ws2812b::SetLedStripeState(StripeState);
 }
 
 // Set pixel at index
-TBool TRgbStripeManager::SetPixel(
+TBool TRgbStripe::SetPixel(
   TUint_2 Index,
   me_Ws2812b::TPixel Color
 )
@@ -69,7 +67,7 @@ TBool TRgbStripeManager::SetPixel(
 }
 
 // Get pixel at index
-TBool TRgbStripeManager::GetPixel(
+TBool TRgbStripe::GetPixel(
   TUint_2 Index,
   me_Ws2812b::TPixel * Color
 )
@@ -86,46 +84,26 @@ TBool TRgbStripeManager::GetPixel(
   return true;
 }
 
-// Display ad hoc pattern to visually determine borders of stripe
-void TRgbStripeManager::Test()
-{
-  Reset();
-
-  {
-    me_Ws2812b::TPixel Blue, Green;
-
-    Blue = { .Green = 0, .Red = 0, .Blue = 0xFF };
-    Green = { .Green = 0xFF, .Red = 0, .Blue = 0 };
-
-    SetPixel(0, Blue);
-    SetPixel(StripeLength / 2, Blue);
-    SetPixel(StripeLength / 2 + 1, Green);
-    SetPixel(StripeLength - 1, Blue);
-  }
-
-  Display();
-}
-
 // ( Maintenance
 
 // [maintenance] Check index
-TBool TRgbStripeManager::CheckIndex(TUint_2 Index)
+TBool TRgbStripe::CheckIndex(TUint_2 Index)
 {
-  return (Index <= StripeLength - 1);
+  return (Index <= Length - 1);
 }
 
 // [maintenance] Set stripe length and allocate memory for pixels
-TBool TRgbStripeManager::SetStripeLength(TUint_2 StripeLength_arg)
+TBool TRgbStripe::SetLength(TUint_2 StripeLength_arg)
 {
-  StripeLength = StripeLength_arg;
+  Length = StripeLength_arg;
 
-  if (!ReservePixelsMem(StripeLength))
+  if (!ReservePixelsMem(Length))
   {
     /*
       No memory for pixels block of our length.
       We will set stripe length to zero.
     */
-    StripeLength = 0;
+    Length = 0;
 
     return false;
   }
@@ -134,9 +112,9 @@ TBool TRgbStripeManager::SetStripeLength(TUint_2 StripeLength_arg)
 }
 
 // [maintenance] Get stripe length
-TUint_2 TRgbStripeManager::GetStripeLength()
+TUint_2 TRgbStripe::GetLength()
 {
-  return StripeLength;
+  return Length;
 }
 
 /*
@@ -146,7 +124,7 @@ TUint_2 TRgbStripeManager::GetStripeLength()
 
   If memory cannot be allocated, return false.
 */
-TBool TRgbStripeManager::ReservePixelsMem(TUint_2 NumPixels)
+TBool TRgbStripe::ReservePixelsMem(TUint_2 NumPixels)
 {
   /*
     If you try to allocate already busy TMemorySegment, Reserve() will
@@ -167,5 +145,5 @@ TBool TRgbStripeManager::ReservePixelsMem(TUint_2 NumPixels)
 
 /*
   2024-09-12
-  2024-09-12 Memory management
+  2024-09-12 Memory management, renamed to "RgbStripe" from "..Manager"
 */
