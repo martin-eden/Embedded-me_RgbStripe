@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-15
+  Last mod.: 2024-09-17
 */
 
 #include <me_BaseTypes.h>
@@ -65,6 +65,7 @@ void DisplayTestPattern()
 {
   Stripe.Reset();
 
+  // Light up border and middle pixels
   {
     me_Ws2812b::TPixel Blue, Green;
 
