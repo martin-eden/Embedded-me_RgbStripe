@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-17
+  Last mod.: 2024-09-18
 */
 
 #include "me_RgbStripe.h"
@@ -11,7 +11,7 @@ using
   me_RgbStripe::TRgbStripe,
   me_Ws2812b::TPixel;
 
-// Set output pin and stripe length. Reset and display
+// Set output pin and stripe length. Reset.
 TBool TRgbStripe::Init(
   TUint_1 OutputPin_arg,
   TUint_2 StripeLength_arg
@@ -23,8 +23,6 @@ TBool TRgbStripe::Init(
     return false;
 
   Reset();
-
-  Display();
 
   return true;
 }

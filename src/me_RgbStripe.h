@@ -38,7 +38,7 @@ namespace me_RgbStripe
       TBool ReservePixelsMem(TUint_2 NumPixels);
 
     public:
-      // Set output pin and stripe length. Reset and display
+      // Set output pin and stripe length. Reset.
       TBool Init(TUint_1 OutputPin, TUint_2 StripeLength);
 
       // Reset - make pixels black
@@ -64,4 +64,5 @@ namespace me_RgbStripe
   2024-09-12
   2024-09-15 Memory management
   2024-09-17 Init() contract now is also resets and display
+  2024-09-18 Init() just resets, not displays
 */
