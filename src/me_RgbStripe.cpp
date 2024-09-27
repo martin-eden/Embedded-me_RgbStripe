@@ -7,7 +7,38 @@
 
 #include "me_RgbStripe.h"
 
+#include <me_Ws2812b.h>
+
 using namespace me_RgbStripe;
+
+/*
+  Color components order
+
+  Our class uses normal RGB fields order.
+  Implementation uses GRB order because device uses that order.
+
+  We have our own memory and can store data there in whatever
+  format we want.
+
+  We are storing pixels in implementation format.
+  Because we don't want to swap bytes in array at every Display().
+*/
+
+// ( Color components order
+typedef me_Ws2812b::TPixel TDevicePixel;
+
+TDevicePixel ColorToDeviceFormat(TColor Color)
+{
+  return
+    { .Green = Color.Green, .Red = Color.Red, .Blue = Color.Blue };
+}
+
+TColor ColorFromDeviceFormat(TDevicePixel Pixel)
+{
+  return
+    { .Red = Pixel.Red, .Green = Pixel.Green, .Blue = Pixel.Blue };
+}
+// ) Pixels order
 
 /*
   Set output pin and stripe length. Reset.
@@ -32,10 +63,46 @@ TBool TRgbStripe::Init(
 */
 void TRgbStripe::Reset()
 {
-  TPixel InitPixel = { .Green = 0, .Red = 0, .Blue = 0 };
+  TColor InitColor = { .Red = 0, .Green = 0, .Blue = 0 };
 
   for (TUint_1 Index = 0; Index < Length; ++Index)
-    SetPixel(Index, InitPixel);
+    SetPixel(Index, InitColor);
+}
+
+/*
+  Set pixel at index
+*/
+TBool TRgbStripe::SetPixel(
+  TUint_2 Index,
+  TColor Color
+)
+{
+  if (!CheckIndex(Index))
+    return false;
+
+  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.Start.Addr;
+
+  DevicePixels[Index] = ColorToDeviceFormat(Color);
+
+  return true;
+}
+
+/*
+  Get pixel at index
+*/
+TBool TRgbStripe::GetPixel(
+  TUint_2 Index,
+  TColor * Color
+)
+{
+  if (!CheckIndex(Index))
+    return false;
+
+  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.Start.Addr;
+
+  *Color = ColorFromDeviceFormat(Pixels[Index]);
+
+  return true;
 }
 
 /*
@@ -47,47 +114,11 @@ void TRgbStripe::Display()
 
   TLedStripeState StripeState;
 
-  StripeState.Pixels = (TPixel *) PixelsMem.Start.Addr;
+  StripeState.Pixels = (TDevicePixel *) PixelsMem.Start.Addr;
   StripeState.Length = Length;
   StripeState.Pin = OutputPin;
 
   SetLedStripeState(StripeState);
-}
-
-/*
-  Set pixel at index
-*/
-TBool TRgbStripe::SetPixel(
-  TUint_2 Index,
-  TPixel Color
-)
-{
-  if (!CheckIndex(Index))
-    return false;
-
-  TPixel * Pixels = (TPixel *) PixelsMem.Start.Addr;
-
-  Pixels[Index] = Color;
-
-  return true;
-}
-
-/*
-  Get pixel at index
-*/
-TBool TRgbStripe::GetPixel(
-  TUint_2 Index,
-  TPixel * Color
-)
-{
-  if (!CheckIndex(Index))
-    return false;
-
-  TPixel * Pixels = (TPixel *) PixelsMem.Start.Addr;
-
-  *Color = Pixels[Index];
-
-  return true;
 }
 
 // ( Maintenance
@@ -138,7 +169,7 @@ TUint_2 TRgbStripe::GetLength()
 */
 TBool TRgbStripe::ReservePixelsMem(TUint_2 NumPixels)
 {
-  TUint_2 PixelsMemSize = NumPixels * sizeof(TPixel);
+  TUint_2 PixelsMemSize = NumPixels * sizeof(TDevicePixel);
 
   /*
     If you try to allocate already busy TMemorySegment, Reserve() will
