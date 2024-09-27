@@ -19,12 +19,20 @@
 
 #include <me_BaseTypes.h>
 #include <me_ManagedMemory.h>
-#include <me_Ws2812b.h>
 
 namespace me_RgbStripe
 {
-  // Bringing pixel definition from implementation
-  typedef me_Ws2812b::TPixel TPixel;
+  /*
+    Color definition
+
+    Using common color components order: red, green, blue.
+  */
+  struct TColor
+  {
+    TUint_1 Red;
+    TUint_1 Green;
+    TUint_1 Blue;
+  };
 
   // RGB stripe manager
   class TRgbStripe
@@ -33,12 +41,6 @@ namespace me_RgbStripe
       TUint_1 OutputPin;
       TUint_2 Length;
       me_ManagedMemory::TManagedMemory PixelsMem;
-
-      // [maintenance] Check index
-      TBool CheckIndex(TUint_2 Index);
-
-      // [maintenance] Allocate memory for pixels
-      TBool ReservePixelsMem(TUint_2 NumPixels);
 
     public:
       // Set output pin and stripe length. Reset.
@@ -51,16 +53,23 @@ namespace me_RgbStripe
       void Display();
 
       // Set pixel
-      TBool SetPixel(TUint_2 Index, TPixel Color);
+      TBool SetPixel(TUint_2 Index, TColor Color);
 
       // Get pixel
-      TBool GetPixel(TUint_2 Index, TPixel * Color);
+      TBool GetPixel(TUint_2 Index, TColor * Color);
 
       // [maintenance] Set stripe length
       TBool SetLength(TUint_2 StripeLength);
 
       // [maintenance] Get stripe length
       TUint_2 GetLength();
+
+    private:
+      // [maintenance] Check index
+      TBool CheckIndex(TUint_2 Index);
+
+      // [maintenance] Allocate memory for pixels
+      TBool ReservePixelsMem(TUint_2 NumPixels);
   };
 }
 
@@ -69,4 +78,5 @@ namespace me_RgbStripe
   2024-09-15 Memory management
   2024-09-17 Init() contract now is also resets and display
   2024-09-18 Init() just resets, not displays
+  2024-09-27 TColor, not TPixel
 */

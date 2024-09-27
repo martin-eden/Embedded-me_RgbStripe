@@ -67,10 +67,10 @@ void DisplayTestPattern()
 
   // Light up border and middle pixels
   {
-    me_RgbStripe::TPixel Blue, Green;
+    me_RgbStripe::TColor Blue, Green;
 
-    Blue = { .Green = 0, .Red = 0, .Blue = 0xFF };
-    Green = { .Green = 0xFF, .Red = 0, .Blue = 0 };
+    Blue = { .Red = 0, .Green = 0, .Blue = 0xFF };
+    Green = { .Red = 0, .Green = 0xFF, .Blue = 0 };
 
     TUint_2 StripeLength = Stripe.GetLength();
 
