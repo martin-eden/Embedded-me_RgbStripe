@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-17
+  Last mod.: 2024-09-27
 */
 
 #include <me_BaseTypes.h>
@@ -35,7 +35,7 @@ void loop()
 // Blink test pattern several times
 void RunTest()
 {
-  TUint_1 OutputPin = A0;
+  TUint_1 OutputPin = 2;
   TUint_2 StripeLength = 60;
 
   printf("Output pin is (%u).\n", OutputPin);
@@ -47,6 +47,8 @@ void RunTest()
     printf("Initialization failed. No memory for that stripe length?\n");
     return;
   }
+
+  printf("We will display test pattern on LED stripe for several seconds.\n");
 
   for (TUint_1 Iteration = 1; Iteration < 5; ++Iteration)
   {
