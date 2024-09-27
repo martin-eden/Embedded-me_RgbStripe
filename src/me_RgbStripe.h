@@ -2,12 +2,12 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-17
+  Last mod.: 2024-09-27
 */
 
 /*
   [me_Ws2812b] does not export class, it exports pixel structure and
-  function. Function argument is state: pin, length and pixels.
+  function. Function argument is state record: pin, length and pixels.
 
   For more high-level code I want intermediate level that is class with
   own memory and some common-sense methods.
@@ -23,6 +23,9 @@
 
 namespace me_RgbStripe
 {
+  // Bringing pixel definition from implementation
+  typedef me_Ws2812b::TPixel TPixel;
+
   // RGB stripe manager
   class TRgbStripe
   {
@@ -48,13 +51,14 @@ namespace me_RgbStripe
       void Display();
 
       // Set pixel
-      TBool SetPixel(TUint_2 Index, me_Ws2812b::TPixel Color);
+      TBool SetPixel(TUint_2 Index, TPixel Color);
 
       // Get pixel
-      TBool GetPixel(TUint_2 Index, me_Ws2812b::TPixel * Color);
+      TBool GetPixel(TUint_2 Index, TPixel * Color);
 
       // [maintenance] Set stripe length
       TBool SetLength(TUint_2 StripeLength);
+
       // [maintenance] Get stripe length
       TUint_2 GetLength();
   };

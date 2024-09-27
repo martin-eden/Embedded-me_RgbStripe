@@ -67,7 +67,7 @@ void DisplayTestPattern()
 
   // Light up border and middle pixels
   {
-    me_Ws2812b::TPixel Blue, Green;
+    me_RgbStripe::TPixel Blue, Green;
 
     Blue = { .Green = 0, .Red = 0, .Blue = 0xFF };
     Green = { .Green = 0xFF, .Red = 0, .Blue = 0 };
