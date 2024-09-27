@@ -2,9 +2,7 @@
 
 (2024-09)
 
-Wrapper class over RGB LED stripe
-([me_Ws2812b.h](https://github.com/martin-eden/Embedded-me_Ws2812b)
-library).
+Wrapper class over mine [WS2812B RGB LED stripe][me_Ws2812b] driver.
 
 Base library exports pixel definition, state structure and state setter
 function. (And I'm happy with that!)
@@ -91,3 +89,4 @@ arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-prop
 [Example]: examples/me_RgbStripe/me_RgbStripe.ino
 [Interface]: src/me_RgbStripe.h
 [Implementation]: src/me_RgbStripe.cpp
+[me_Ws2812b]: https://github.com/martin-eden/Embedded-me_Ws2812b
