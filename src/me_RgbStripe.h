@@ -52,17 +52,23 @@ namespace me_RgbStripe
       // Actually display by sending data
       void Display();
 
-      // Set pixel
-      TBool SetPixel(TUint_2 Index, TColor Color);
-
       // Get pixel
       TBool GetPixel(TUint_2 Index, TColor * Color);
 
-      // [maintenance] Set stripe length
-      TBool SetLength(TUint_2 StripeLength);
+      // Set pixel
+      TBool SetPixel(TUint_2 Index, TColor Color);
+
+      // [design burden] Get output pin
+      TUint_1 GetOutputPin();
+
+      // [design burden] Set output pin
+      TBool SetOutputPin(TUint_1 OutputPin_arg);
 
       // [maintenance] Get stripe length
       TUint_2 GetLength();
+
+      // [maintenance] Set stripe length
+      TBool SetLength(TUint_2 StripeLength);
 
     private:
       // [maintenance] Check index

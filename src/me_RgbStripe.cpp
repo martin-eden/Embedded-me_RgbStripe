@@ -27,13 +27,17 @@ using namespace me_RgbStripe;
 // ( Color components order
 typedef me_Ws2812b::TPixel TDevicePixel;
 
-TDevicePixel ColorToDeviceFormat(TColor Color)
+TDevicePixel ColorToDeviceFormat(
+  TColor Color
+)
 {
   return
     { .Green = Color.Green, .Red = Color.Red, .Blue = Color.Blue };
 }
 
-TColor ColorFromDeviceFormat(TDevicePixel Pixel)
+TColor ColorFromDeviceFormat(
+  TDevicePixel Pixel
+)
 {
   return
     { .Red = Pixel.Red, .Green = Pixel.Green, .Blue = Pixel.Blue };
@@ -45,12 +49,13 @@ TColor ColorFromDeviceFormat(TDevicePixel Pixel)
 */
 TBool TRgbStripe::Init(
   TUint_1 OutputPin_arg,
-  TUint_2 StripeLength_arg
+  TUint_2 Length_arg
 )
 {
-  OutputPin = OutputPin_arg;
+  if (!SetOutputPin(OutputPin_arg))
+    return false;
 
-  if (!SetLength(StripeLength_arg))
+  if (!SetLength(Length_arg))
     return false;
 
   Reset();
@@ -126,7 +131,9 @@ void TRgbStripe::Display()
 /*
   [maintenance] Check index
 */
-TBool TRgbStripe::CheckIndex(TUint_2 Index)
+TBool TRgbStripe::CheckIndex(
+  TUint_2 Index
+)
 {
   return (Index <= Length - 1);
 }
@@ -134,9 +141,11 @@ TBool TRgbStripe::CheckIndex(TUint_2 Index)
 /*
   [maintenance] Set stripe length and allocate memory for pixels
 */
-TBool TRgbStripe::SetLength(TUint_2 StripeLength_arg)
+TBool TRgbStripe::SetLength(
+  TUint_2 Length_arg
+)
 {
-  Length = StripeLength_arg;
+  Length = Length_arg;
 
   if (!ReservePixelsMem(Length))
   {
@@ -167,7 +176,9 @@ TUint_2 TRgbStripe::GetLength()
 
   If memory cannot be allocated, return false.
 */
-TBool TRgbStripe::ReservePixelsMem(TUint_2 NumPixels)
+TBool TRgbStripe::ReservePixelsMem(
+  TUint_2 NumPixels
+)
 {
   TUint_2 PixelsMemSize = NumPixels * sizeof(TDevicePixel);
 
@@ -184,6 +195,31 @@ TBool TRgbStripe::ReservePixelsMem(TUint_2 NumPixels)
   PixelsMem.Release();
 
   return PixelsMem.Reserve(PixelsMemSize);
+}
+
+/*
+  [design burden] Get output pin
+*/
+TUint_1 TRgbStripe::GetOutputPin()
+{
+  return OutputPin;
+}
+
+// [design burden] Set output pin
+TBool TRgbStripe::SetOutputPin(
+  TUint_1 OutputPin_arg
+)
+{
+  /*
+    We can check here that pin value makes sense.
+
+    But any pin value makes sense here, as we are not doing job.
+    We are just preparing to call implementation.
+  */
+
+  OutputPin = OutputPin_arg;
+
+  return true;
 }
 
 // ) Maintenance
