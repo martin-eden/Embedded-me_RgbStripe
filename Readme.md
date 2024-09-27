@@ -19,43 +19,34 @@ Plus set pixel/get pixel of course. Plus init, reset and display.
 
 ## Interface
 
-* Set output pin and stripe length
+RGB stripe for us is _*Output pin*_, _*Length*_ (number of LEDs) and
+_*Data*_ (pixels memory that is not directly exposed).
 
-  ```C
-  TBool Init(TUint_1 OutputPin, TUint_2 StripeLength);
-  ```
+We have trivial methods
 
-* Reset - make pixels black
+  * `TBool Init(Output_Pin, Length)`
+  * Get/set output pin
+  * Get/set length (changes size of _Data_)
 
-  ```C
-  void Reset();
-  ```
+We are working with data by
 
-* Set pixel
+  * `TBool GetPixel(Index, *Color)`
+  * `TBool SetPixel(Index, Color)`
+  * `Display()` to actually send data to LED stripe
+  * `Reset()` to set all pixels to zeroes
 
-  ```C
-  TBool SetPixel(TUint_2 Index, me_Ws2812b::TPixel Color);
-  ```
+So we are also exporting `TColor` struct which is typical RGB.
 
-* Get pixel
-
-  ```C
-  TBool GetPixel(TUint_2 Index, me_Ws2812b::TPixel * Color);
-  ```
-
-* Actually display by sending data
-
-  ```C
-  void Display();
-  ```
+For complete documentation [read code][Interface].
 
 
 ## Example interaction
 
-It blinks some test pattern on stripe. Output is:
+[Example code][Example] blinks some test pattern on stripe.
+Output is:
 ```
 [me_RgbStripe] Hello there!
-Output pin is (14).
+Output pin is (2).
 Stripe length is (60).
 [me_RgbStripe] Done.
 ```
@@ -87,12 +78,16 @@ arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-prop
 
 # Code
 
-* [Example](examples/me_RgbStripe/me_RgbStripe.ino)
-* [Interface](src/me_RgbStripe.h)
-* [Implementation](src/me_RgbStripe.cpp)
+* [Example][Example]
+* [Interface][Interface]
+* [Implementation][Implementation]
 
 
 # See also
 
 * [My other embedded C++ libraries](https://github.com/martin-eden/Embedded_Crafts/tree/master/Parts)
 * [My other repositories](https://github.com/martin-eden/contents)
+
+[Example]: examples/me_RgbStripe/me_RgbStripe.ino
+[Interface]: src/me_RgbStripe.h
+[Implementation]: src/me_RgbStripe.cpp
