@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-27
+  Last mod.: 2024-10-05
 */
 
 #include "me_RgbStripe.h"
@@ -85,7 +85,7 @@ TBool TRgbStripe::SetPixel(
   if (!CheckIndex(Index))
     return false;
 
-  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.Start.Addr;
+  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.GetData().Start.Addr;
 
   DevicePixels[Index] = ColorToDeviceFormat(Color);
 
@@ -103,7 +103,7 @@ TBool TRgbStripe::GetPixel(
   if (!CheckIndex(Index))
     return false;
 
-  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.Start.Addr;
+  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.GetData().Start.Addr;
 
   *Color = ColorFromDeviceFormat(Pixels[Index]);
 
@@ -119,7 +119,7 @@ void TRgbStripe::Display()
 
   TLedStripeState StripeState;
 
-  StripeState.Pixels = (TDevicePixel *) PixelsMem.Start.Addr;
+  StripeState.Pixels = (TDevicePixel *) PixelsMem.GetData().Start.Addr;
   StripeState.Length = Length;
   StripeState.Pin = OutputPin;
 
@@ -171,10 +171,6 @@ TUint_2 TRgbStripe::GetLength()
 
 /*
   [maintenance] Reserve memory for pixels
-
-  Previous memory segment is released.
-
-  If memory cannot be allocated, return false.
 */
 TBool TRgbStripe::ReservePixelsMem(
   TUint_2 NumPixels
@@ -182,19 +178,7 @@ TBool TRgbStripe::ReservePixelsMem(
 {
   TUint_2 PixelsMemSize = NumPixels * sizeof(TDevicePixel);
 
-  /*
-    If you try to allocate already busy TMemorySegment, Reserve() will
-    just return false.
-
-    If you try to free already empty memory segment, Release() will
-    just return false.
-
-    So it is safe to call Release() before Reserve().
-  */
-
-  PixelsMem.Release();
-
-  return PixelsMem.Reserve(PixelsMemSize);
+  return PixelsMem.ResizeTo(PixelsMemSize);
 }
 
 /*
