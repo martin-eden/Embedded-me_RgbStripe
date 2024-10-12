@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-05
+  Last mod.: 2024-10-12
 */
 
 #include "me_RgbStripe.h"
@@ -145,20 +145,15 @@ TBool TRgbStripe::SetLength(
   TUint_2 Length_arg
 )
 {
-  Length = Length_arg;
+  TUint_2 PixelsMemSize = Length_arg * sizeof(TDevicePixel);
 
-  if (!ReservePixelsMem(Length))
+  if (PixelsMem.ResizeTo(PixelsMemSize))
   {
-    /*
-      No memory for pixels block of our length.
-      We will set stripe length to zero.
-    */
-    Length = 0;
-
-    return false;
+    Length = Length_arg;
+    return true;
   }
 
-  return true;
+  return false;
 }
 
 /*
@@ -167,18 +162,6 @@ TBool TRgbStripe::SetLength(
 TUint_2 TRgbStripe::GetLength()
 {
   return Length;
-}
-
-/*
-  [maintenance] Reserve memory for pixels
-*/
-TBool TRgbStripe::ReservePixelsMem(
-  TUint_2 NumPixels
-)
-{
-  TUint_2 PixelsMemSize = NumPixels * sizeof(TDevicePixel);
-
-  return PixelsMem.ResizeTo(PixelsMemSize);
 }
 
 /*
@@ -198,7 +181,7 @@ TBool TRgbStripe::SetOutputPin(
     We can check here that pin value makes sense.
 
     But any pin value makes sense here, as we are not doing job.
-    We are just preparing to call implementation.
+    We are just collecting data to call implementation.
   */
 
   OutputPin = OutputPin_arg;

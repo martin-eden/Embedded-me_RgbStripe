@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-27
+  Last mod.: 2024-10-12
 */
 
 /*
@@ -73,9 +73,6 @@ namespace me_RgbStripe
     private:
       // [maintenance] Check index
       TBool CheckIndex(TUint_2 Index);
-
-      // [maintenance] Allocate memory for pixels
-      TBool ReservePixelsMem(TUint_2 NumPixels);
   };
 }
 
