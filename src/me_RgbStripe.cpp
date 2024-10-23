@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-12
+  Last mod.: 2024-10-23
 */
 
 #include "me_RgbStripe.h"
@@ -85,7 +85,7 @@ TBool TRgbStripe::SetPixel(
   if (!CheckIndex(Index))
     return false;
 
-  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.GetData().Start.Addr;
+  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.GetData().Addr;
 
   DevicePixels[Index] = ColorToDeviceFormat(Color);
 
@@ -103,7 +103,7 @@ TBool TRgbStripe::GetPixel(
   if (!CheckIndex(Index))
     return false;
 
-  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.GetData().Start.Addr;
+  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.GetData().Addr;
 
   *Color = ColorFromDeviceFormat(Pixels[Index]);
 
@@ -119,7 +119,7 @@ void TRgbStripe::Display()
 
   TLedStripeState StripeState;
 
-  StripeState.Pixels = (TDevicePixel *) PixelsMem.GetData().Start.Addr;
+  StripeState.Pixels = (TDevicePixel *) PixelsMem.GetData().Addr;
   StripeState.Length = Length;
   StripeState.Pin = OutputPin;
 
