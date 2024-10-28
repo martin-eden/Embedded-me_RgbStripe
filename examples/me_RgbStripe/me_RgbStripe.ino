@@ -2,14 +2,14 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-27
+  Last mod.: 2024-10-28
 */
+
+#include <me_RgbStripe.h>
 
 #include <me_BaseTypes.h>
 #include <me_UartSpeeds.h>
 #include <me_InstallStandardStreams.h>
-
-#include <me_RgbStripe.h>
 
 me_RgbStripe::TRgbStripe Stripe;
 
@@ -48,7 +48,7 @@ void RunTest()
     return;
   }
 
-  printf("We will display test pattern on LED stripe for several seconds.\n");
+  printf("We will blink test pattern on LED stripe for several seconds.\n");
 
   for (TUint_1 Iteration = 1; Iteration < 5; ++Iteration)
   {
