@@ -1,8 +1,8 @@
-# What
+## What
 
 (2024-09)
 
-Wrapper class over mine [WS2812B RGB LED stripe][me_Ws2812b] driver.
+Wrapper class over mine [WS2812B][me_Ws2812b] RGB LED stripe driver.
 
 Base library exports pixel definition, state structure and state setter
 function. (And I'm happy with that!)
@@ -35,18 +35,34 @@ We are working with data by
 
 So we are also exporting `TColor` struct which is typical RGB.
 
-For complete documentation [read code][Interface].
 
+## Sample output
 
-## Example interaction
-
-[Example code][Example] blinks some test pattern on stripe.
+Example code blinks some test pattern on stripe.
 Output is:
+
 ```
 [me_RgbStripe] Hello there!
 Output pin is (2).
 Stripe length is (60).
+We will blink test pattern on LED stripe for several seconds.
 [me_RgbStripe] Done.
+
+```
+
+## Code
+
+* [Example][Example]
+* [Interface][Interface]
+* [Implementation][Implementation]
+
+
+## Compile
+
+Zero-warnings compilation:
+
+```bash
+arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-property compiler.cpp.extra_flags="-std=c++1z"
 ```
 
 
@@ -66,23 +82,9 @@ Run [Install.sh](Install.sh).
 Run [Remove.sh](Remove.sh).
 
 
-# Compile
+## See also
 
-Zero-warnings compilation:
-
-```bash
-arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-property compiler.cpp.extra_flags="-std=c++1z"
-```
-
-# Code
-
-* [Example][Example]
-* [Interface][Interface]
-* [Implementation][Implementation]
-
-
-# See also
-
+* [me_Ws2812b][me_Ws2812b]
 * [My other embedded C++ libraries](https://github.com/martin-eden/Embedded_Crafts/tree/master/Parts)
 * [My other repositories](https://github.com/martin-eden/contents)
 
