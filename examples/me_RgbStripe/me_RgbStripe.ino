@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-28
+  Last mod.: 2024-12-17
 */
 
 #include <me_RgbStripe.h>
@@ -17,7 +17,7 @@ void setup()
 {
   InstallStandardStreams();
 
-  Serial.begin(me_UartSpeeds::Arduino_Normal_Bps);
+  Serial.begin(me_UartSpeeds::Bps_115k);
 
   Serial.setTimeout(15);
 
