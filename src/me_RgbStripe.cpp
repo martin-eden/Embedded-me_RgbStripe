@@ -2,10 +2,10 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-23
+  Last mod.: 2024-12-20
 */
 
-#include "me_RgbStripe.h"
+#include <me_RgbStripe.h>
 
 #include <me_Ws2812b.h>
 
