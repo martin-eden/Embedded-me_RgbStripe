@@ -2,28 +2,24 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-12-17
+  Last mod.: 2024-12-20
 */
 
 #include <me_RgbStripe.h>
 
 #include <me_BaseTypes.h>
-#include <me_UartSpeeds.h>
-#include <me_InstallStandardStreams.h>
+#include <me_Uart.h>
+#include <me_Console.h>
 
 me_RgbStripe::TRgbStripe Stripe;
 
 void setup()
 {
-  InstallStandardStreams();
+  me_Uart::Init(me_Uart::Speed_115k_Bps);
 
-  Serial.begin(me_UartSpeeds::Bps_115k);
-
-  Serial.setTimeout(15);
-
-  printf("[me_RgbStripe] Hello there!\n");
+  Console.Print("[me_RgbStripe] Hello there!");
   RunTest();
-  printf("[me_RgbStripe] Done.\n");
+  Console.Print("[me_RgbStripe] Done.");
 }
 
 void loop()
@@ -38,17 +34,22 @@ void RunTest()
   TUint_1 OutputPin = 2;
   TUint_2 StripeLength = 60;
 
-  printf("Output pin is (%u).\n", OutputPin);
-  printf("Stripe length is (%u).\n", StripeLength);
+  Console.Write("Output pin:");
+  Console.Print(OutputPin);
+  Console.EndLine();
+
+  Console.Write("Stripe length:");
+  Console.Print(StripeLength);
+  Console.EndLine();
 
   TBool InitIsDone = Stripe.Init(OutputPin, StripeLength);
   if (!InitIsDone)
   {
-    printf("Initialization failed. No memory for that stripe length?\n");
+    Console.Print("Initialization failed. No memory for that stripe length?");
     return;
   }
 
-  printf("We will blink test pattern on LED stripe for several seconds.\n");
+  Console.Print("We will blink test pattern on LED stripe for several seconds.");
 
   for (TUint_1 Iteration = 1; Iteration < 5; ++Iteration)
   {
@@ -86,4 +87,5 @@ void DisplayTestPattern()
 /*
   2024-09-12
   2024-09-15
+  2024-12-20
 */
