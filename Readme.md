@@ -36,18 +36,15 @@ We are working with data by
 So we are also exporting `TColor` struct which is typical RGB.
 
 
-## Sample output
+## Reference output
 
-Example code blinks some test pattern on stripe.
-Output is:
-
+Example code blinks some test pattern on stripe:
 ```
 [me_RgbStripe] Hello there!
-Output pin is (2).
-Stripe length is (60).
+Output pin: 002
+Stripe length: 00060
 We will blink test pattern on LED stripe for several seconds.
 [me_RgbStripe] Done.
-
 ```
 
 ## Code
@@ -72,23 +69,23 @@ arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-prop
   * bash
 
 
-## Install
+## Install/remove
 
-Run [Install.sh](Install.sh).
-
-
-## Remove
-
-Run [Remove.sh](Remove.sh).
+Easy way is to clone [GetLibs][GetLibs] repo and run it's code.
 
 
 ## See also
 
 * [me_Ws2812b][me_Ws2812b]
-* [My other embedded C++ libraries](https://github.com/martin-eden/Embedded_Crafts/tree/master/Parts)
-* [My other repositories](https://github.com/martin-eden/contents)
+* [My other embedded C++ libraries][Embedded]
+* [My other repositories][Repos]
 
 [Example]: examples/me_RgbStripe/me_RgbStripe.ino
 [Interface]: src/me_RgbStripe.h
 [Implementation]: src/me_RgbStripe.cpp
+
+[GetLibs]: https://github.com/martin-eden/Embedded-Framework-GetLibs
+
 [me_Ws2812b]: https://github.com/martin-eden/Embedded-me_Ws2812b
+[Embedded]: https://github.com/martin-eden/Embedded_Crafts/tree/master/Parts
+[Repos]: https://github.com/martin-eden/contents
