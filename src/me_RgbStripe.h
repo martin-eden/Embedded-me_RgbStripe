@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-12
+  Last mod.: 2025-08-29
 */
 
 /*
@@ -18,7 +18,7 @@
 #pragma once
 
 #include <me_BaseTypes.h>
-#include <me_ManagedMemory.h>
+#include <me_WorkmemTools.h>
 
 namespace me_RgbStripe
 {
@@ -40,7 +40,7 @@ namespace me_RgbStripe
     private:
       TUint_1 OutputPin;
       TUint_2 Length;
-      me_ManagedMemory::TManagedMemory PixelsMem;
+      me_WorkmemTools::TManagedMemory PixelsMem;
 
     public:
       // Set output pin and stripe length. Reset.
