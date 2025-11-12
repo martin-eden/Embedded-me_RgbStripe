@@ -59,7 +59,11 @@ TBool TRgbStripe::CheckIndex(
   TUint_2 Index
 )
 {
-  return (Index <= Length - 1);
+  if (Index < 1)
+    return false;
+  if (Index > Length)
+    return false;
+  return true;
 }
 
 /*
@@ -97,7 +101,7 @@ TBool TRgbStripe::SetPixel(
 
   TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.Addr;
 
-  DevicePixels[Index] = ColorToDeviceFormat(Color);
+  DevicePixels[Index - 1] = ColorToDeviceFormat(Color);
 
   return true;
 }
@@ -115,7 +119,7 @@ TBool TRgbStripe::GetPixel(
 
   TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.Addr;
 
-  *Color = ColorFromDeviceFormat(Pixels[Index]);
+  *Color = ColorFromDeviceFormat(Pixels[Index - 1]);
 
   return true;
 }
@@ -146,7 +150,7 @@ void TRgbStripe::Clear()
   TUint_2 Index;
   TUint_2 Length = GetLength();
 
-  for (Index = 0; Index < Length; ++Index)
+  for (Index = 1; Index <= Length; ++Index)
     SetPixel(Index, InitColor);
 }
 

@@ -15,6 +15,10 @@
   Here it is.
 */
 
+/*
+  Index of first pixel is 1 (one).
+*/
+
 #pragma once
 
 #include <me_BaseTypes.h>
