@@ -47,6 +47,8 @@ namespace me_RgbStripe
       TBool SetPixel(TUint_2 Index, TColor Color);
       // Send data to RGB stripe
       void Display();
+      // [Handy] Set all colors to black
+      void Clear();
       // Check that index is valid. Method for wrappers
       TBool CheckIndex(TUint_2 Index);
     private:

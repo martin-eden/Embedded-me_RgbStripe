@@ -27,14 +27,14 @@ using namespace me_RgbStripe;
 // ( Color components order
 typedef me_Ws2812b::TPixel TDevicePixel;
 
-TDevicePixel ColorToDeviceFormat(
+static TDevicePixel ColorToDeviceFormat(
   TColor Color
 )
 {
   return (TDevicePixel) { Color.Green, Color.Red, Color.Blue };
 }
 
-TColor ColorFromDeviceFormat(
+static TColor ColorFromDeviceFormat(
   TDevicePixel Pixel
 )
 {
@@ -134,6 +134,20 @@ void TRgbStripe::Display()
   StripeState.Pin = OutputPin;
 
   SetLedStripeState(StripeState);
+}
+
+/*
+  Set pixels to initial state (zeroes)
+*/
+void TRgbStripe::Clear()
+{
+  const TColor InitColor = { 0, 0, 0 };
+
+  TUint_2 Index;
+  TUint_2 Length = GetLength();
+
+  for (Index = 0; Index < Length; ++Index)
+    SetPixel(Index, InitColor);
 }
 
 /*
