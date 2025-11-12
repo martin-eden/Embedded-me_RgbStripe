@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-12-20
+  Last mod.: 2025-11-12
 */
 
 #include <me_RgbStripe.h>
@@ -18,7 +18,7 @@ using namespace me_RgbStripe;
   Implementation uses GRB order because device uses that order.
 
   We have our own memory and can store data there in whatever
-  format we want.
+  format we please.
 
   We are storing pixels in implementation format.
   Because we don't want to swap bytes in array at every Display().
@@ -31,47 +31,57 @@ TDevicePixel ColorToDeviceFormat(
   TColor Color
 )
 {
-  return
-    { .Green = Color.Green, .Red = Color.Red, .Blue = Color.Blue };
+  return (TDevicePixel) { Color.Green, Color.Red, Color.Blue };
 }
 
 TColor ColorFromDeviceFormat(
   TDevicePixel Pixel
 )
 {
-  return
-    { .Red = Pixel.Red, .Green = Pixel.Green, .Blue = Pixel.Blue };
+  return (TColor) { Pixel.Red, Pixel.Green, Pixel.Blue };
 }
 // ) Pixels order
 
 /*
-  Set output pin and stripe length. Reset.
+  [Internal] Calculate length from data segment
+
+  Length and data segment are class fields.
 */
-TBool TRgbStripe::Init(
-  TUint_1 OutputPin_arg,
-  TUint_2 Length_arg
-)
+void TRgbStripe::CalcLength()
 {
-  if (!SetOutputPin(OutputPin_arg))
-    return false;
-
-  if (!SetLength(Length_arg))
-    return false;
-
-  Reset();
-
-  return true;
+  Length = PixelsMem.Size / sizeof(TDevicePixel);
 }
 
 /*
-  Set pixels to initial state (zeroes)
+  [Internal] Check index
 */
-void TRgbStripe::Reset()
+TBool TRgbStripe::CheckIndex(
+  TUint_2 Index
+)
 {
-  TColor InitColor = { .Red = 0, .Green = 0, .Blue = 0 };
+  return (Index <= Length - 1);
+}
 
-  for (TUint_1 Index = 0; Index < Length; ++Index)
-    SetPixel(Index, InitColor);
+/*
+  Get stripe length
+*/
+TUint_2 TRgbStripe::GetLength()
+{
+  return Length;
+}
+
+/*
+  Set output pin and stripe length. Reset.
+*/
+void TRgbStripe::Init(
+  TUint_1 OutputPin,
+  TAddressSegment DataSeg
+)
+{
+  this->OutputPin = OutputPin;
+  this->PixelsMem = DataSeg;
+
+  CalcLength();
 }
 
 /*
@@ -85,7 +95,7 @@ TBool TRgbStripe::SetPixel(
   if (!CheckIndex(Index))
     return false;
 
-  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.GetData().Addr;
+  TDevicePixel * DevicePixels = (TDevicePixel *) PixelsMem.Addr;
 
   DevicePixels[Index] = ColorToDeviceFormat(Color);
 
@@ -96,14 +106,14 @@ TBool TRgbStripe::SetPixel(
   Get pixel at index
 */
 TBool TRgbStripe::GetPixel(
-  TUint_2 Index,
-  TColor * Color
+  TColor * Color,
+  TUint_2 Index
 )
 {
   if (!CheckIndex(Index))
     return false;
 
-  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.GetData().Addr;
+  TDevicePixel * Pixels = (TDevicePixel *) PixelsMem.Addr;
 
   *Color = ColorFromDeviceFormat(Pixels[Index]);
 
@@ -119,77 +129,12 @@ void TRgbStripe::Display()
 
   TLedStripeState StripeState;
 
-  StripeState.Pixels = (TDevicePixel *) PixelsMem.GetData().Addr;
+  StripeState.Pixels = (TDevicePixel *) PixelsMem.Addr;
   StripeState.Length = Length;
   StripeState.Pin = OutputPin;
 
   SetLedStripeState(StripeState);
 }
-
-// ( Maintenance
-
-/*
-  [maintenance] Check index
-*/
-TBool TRgbStripe::CheckIndex(
-  TUint_2 Index
-)
-{
-  return (Index <= Length - 1);
-}
-
-/*
-  [maintenance] Set stripe length and allocate memory for pixels
-*/
-TBool TRgbStripe::SetLength(
-  TUint_2 Length_arg
-)
-{
-  TUint_2 PixelsMemSize = Length_arg * sizeof(TDevicePixel);
-
-  if (PixelsMem.ResizeTo(PixelsMemSize))
-  {
-    Length = Length_arg;
-    return true;
-  }
-
-  return false;
-}
-
-/*
-  [maintenance] Get stripe length
-*/
-TUint_2 TRgbStripe::GetLength()
-{
-  return Length;
-}
-
-/*
-  [design burden] Get output pin
-*/
-TUint_1 TRgbStripe::GetOutputPin()
-{
-  return OutputPin;
-}
-
-// [design burden] Set output pin
-TBool TRgbStripe::SetOutputPin(
-  TUint_1 OutputPin_arg
-)
-{
-  /*
-    We can check here that pin value makes sense.
-
-    But any pin value makes sense here, as we are not doing job.
-    We are just collecting data to call implementation.
-  */
-
-  OutputPin = OutputPin_arg;
-
-  return true;
-}
-
-// ) Maintenance
 
 /*
   2024-09-12
