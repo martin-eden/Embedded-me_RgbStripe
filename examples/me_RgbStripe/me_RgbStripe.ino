@@ -13,6 +13,27 @@
 
 me_RgbStripe::TRgbStripe Stripe;
 
+// Display ad hoc pattern to visually determine borders of stripe
+void DisplayTestPattern()
+{
+  Stripe.Clear();
+
+  // Light up border and middle pixels
+  {
+    me_RgbStripe::TColor Blue = { .Red = 0, .Green = 0, .Blue = 0xFF };
+    me_RgbStripe::TColor Green = { .Red = 0, .Green = 0xFF, .Blue = 0 };
+
+    TUint_2 StripeLength = Stripe.GetLength();
+
+    Stripe.SetPixel(1, Blue);
+    Stripe.SetPixel(StripeLength / 2, Blue);
+    Stripe.SetPixel(StripeLength / 2 + 1, Green);
+    Stripe.SetPixel(StripeLength, Blue);
+  }
+
+  Stripe.Display();
+}
+
 // Blink test pattern several times
 void RunTest()
 {
@@ -45,27 +66,6 @@ void RunTest()
     me_Delays::Delay_S(1);
   }
   DisplayTestPattern();
-}
-
-// Display ad hoc pattern to visually determine borders of stripe
-void DisplayTestPattern()
-{
-  Stripe.Clear();
-
-  // Light up border and middle pixels
-  {
-    me_RgbStripe::TColor Blue = { .Red = 0, .Green = 0, .Blue = 0xFF };
-    me_RgbStripe::TColor Green = { .Red = 0, .Green = 0xFF, .Blue = 0 };
-
-    TUint_2 StripeLength = Stripe.GetLength();
-
-    Stripe.SetPixel(0, Blue);
-    Stripe.SetPixel(StripeLength / 2, Blue);
-    Stripe.SetPixel(StripeLength / 2 + 1, Green);
-    Stripe.SetPixel(StripeLength - 1, Blue);
-  }
-
-  Stripe.Display();
 }
 
 void setup()

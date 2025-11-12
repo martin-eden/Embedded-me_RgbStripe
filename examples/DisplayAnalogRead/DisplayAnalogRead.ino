@@ -41,7 +41,7 @@ void DisplayValue(
   */
   const TUint_1 MaxColorComponentValue = 100;
 
-  static TUint_2 LastPixelIndex = 0;
+  static TUint_2 PrevPixelIndex = 0;
   TUint_2 CurPixelIndex;
   TUint_1 ColorComponentValue;
   me_RgbStripe::TColor Color;
@@ -49,10 +49,10 @@ void DisplayValue(
   if (Value > MaxValue)
     return;
 
-  if (LastPixelIndex == Stripe.GetLength() - 1)
-    CurPixelIndex = 0;
-  else
-    CurPixelIndex = LastPixelIndex + 1;
+  CurPixelIndex = PrevPixelIndex + 1;
+
+  if (!Stripe.CheckIndex(CurPixelIndex))
+    CurPixelIndex = 1;
 
   // Map [0, 1023]
   ColorComponentValue = map(Value, 0, MaxValue, 0, MaxColorComponentValue);
@@ -66,7 +66,7 @@ void DisplayValue(
   Stripe.SetPixel(CurPixelIndex, Color);
   Stripe.Display();
 
-  LastPixelIndex = CurPixelIndex;
+  PrevPixelIndex = CurPixelIndex;
 }
 
 /*
@@ -78,11 +78,11 @@ void DisplayReadings(
 {
   const TUint_2 MaxGapToIgnore = 20;
 
-  static TUint_2 LastPrintedValue = 0;
+  static TUint_2 PrevPrintedValue = 0;
 
   TUint_2 Gap;
 
-  Gap = GetGap(AnalogValue, LastPrintedValue);
+  Gap = GetGap(AnalogValue, PrevPrintedValue);
 
   if (Gap > MaxGapToIgnore)
   {
@@ -90,7 +90,7 @@ void DisplayReadings(
 
     DisplayValue(AnalogValue);
 
-    LastPrintedValue = AnalogValue;
+    PrevPrintedValue = AnalogValue;
   }
 }
 
