@@ -2,37 +2,26 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-12-20
+  Last mod.: 2025-11-12
 */
 
 #include <me_RgbStripe.h>
 
 #include <me_BaseTypes.h>
-#include <me_Uart.h>
 #include <me_Console.h>
+#include <me_Delays.h>
 
 me_RgbStripe::TRgbStripe Stripe;
-
-void setup()
-{
-  me_Uart::Init(me_Uart::Speed_115k_Bps);
-
-  Console.Print("[me_RgbStripe] Hello there!");
-  RunTest();
-  Console.Print("[me_RgbStripe] Done.");
-}
-
-void loop()
-{
-}
-
-// --
 
 // Blink test pattern several times
 void RunTest()
 {
-  TUint_1 OutputPin = 2;
-  TUint_2 StripeLength = 60;
+  const TUint_1 OutputPin = 2;
+  const TUint_2 StripeLength = 60;
+  const TUint_2 DataMemSize = StripeLength * sizeof(me_RgbStripe::TColor);
+
+  TUint_1 DataMem[DataMemSize];
+  const TAddressSegment DataSeg = { (TAddress) &DataMem, sizeof(DataMem) };
 
   Console.Write("Output pin:");
   Console.Print(OutputPin);
@@ -42,23 +31,18 @@ void RunTest()
   Console.Print(StripeLength);
   Console.EndLine();
 
-  TBool InitIsDone = Stripe.Init(OutputPin, StripeLength);
-  if (!InitIsDone)
-  {
-    Console.Print("Initialization failed. No memory for that stripe length?");
-    return;
-  }
+  Stripe.Init(OutputPin, DataSeg);
 
   Console.Print("We will blink test pattern on LED stripe for several seconds.");
 
   for (TUint_1 Iteration = 1; Iteration < 5; ++Iteration)
   {
     DisplayTestPattern();
-    delay(1000);
+    me_Delays::Delay_S(1);
 
-    Stripe.Reset();
+    Stripe.Clear();
     Stripe.Display();
-    delay(1000);
+    me_Delays::Delay_S(1);
   }
   DisplayTestPattern();
 }
@@ -66,7 +50,7 @@ void RunTest()
 // Display ad hoc pattern to visually determine borders of stripe
 void DisplayTestPattern()
 {
-  Stripe.Reset();
+  Stripe.Clear();
 
   // Light up border and middle pixels
   {
@@ -82,6 +66,22 @@ void DisplayTestPattern()
   }
 
   Stripe.Display();
+}
+
+void setup()
+{
+  me_Delays::Init();
+  Console.Init();
+
+  Console.Print("( [me_RgbStripe] test");
+  Console.Indent();
+  RunTest();
+  Console.Unindent();
+  Console.Print(") Done");
+}
+
+void loop()
+{
 }
 
 /*
