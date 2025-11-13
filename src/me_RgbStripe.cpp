@@ -156,5 +156,5 @@ void TRgbStripe::Clear()
 
 /*
   2024-09-12
-  2024-09-12 Memory management, renamed to "RgbStripe" from "..Manager"
+  2025-11-12
 */
