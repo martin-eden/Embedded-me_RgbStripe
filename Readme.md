@@ -1,58 +1,37 @@
 ## What
 
-(2024-09)
+(2024-09, 2025-11)
 
-Wrapper class over mine [WS2812B][me_Ws2812b] RGB LED stripe driver.
+Wrapper class over my [WS2812B][me_Ws2812b] RGB LED stripe driver.
 
 Base library exports pixel definition, state structure and state setter
 function. (And I'm happy with that!)
 
 State is output pin, stripe length and pointer to pixels data.
 
-This class manages that state. So you can change stripe length at
-runtime and pixels memory will grow or shrink.
-
-Plus set pixel/get pixel of course. Plus init, reset and display.
-
+This class manages that state.
 
 ## Interface
 
-RGB stripe for us is _*Output pin*_, _*Length*_ (number of LEDs) and
-_*Data*_ (pixels memory that is not directly exposed).
+For real interface read code. Here is more high-level description.
 
-We have trivial methods
+Class provides higher-level interface to RGB stripe.
 
-  * `TBool Init(Output_Pin, Length)`
-  * Get/set output pin
-  * Get/set length (changes size of _Data_)
+**Init()** takes output pin number and description of RAM memory
+region to store data.
 
-We are working with data by
+Accessors are **GetPixel()** and **SetPixel()**.
 
-  * `TBool GetPixel(Index, *Color)`
-  * `TBool SetPixel(Index, Color)`
-  * `Display()` to actually send data to LED stripe
-  * `Reset()` to set all pixels to zeroes
+**GetLength()** returns length of stripe in pixels (depends of
+memory size provided in Init()).
 
-So we are also exporting `TColor` struct which is typical RGB.
-
-
-## Reference output
-
-Example code blinks some test pattern on stripe:
-```
-[me_RgbStripe] Hello there!
-Output pin: 002
-Stripe length: 00060
-We will blink test pattern on LED stripe for several seconds.
-[me_RgbStripe] Done.
-```
+**Display()** actually sends data to stripe.
 
 ## Code
 
-* [Example][Example]
 * [Interface][Interface]
 * [Implementation][Implementation]
-
+* [Example][Example]
 
 ## Compile
 
@@ -62,17 +41,14 @@ Zero-warnings compilation:
 arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-property compiler.cpp.extra_flags="-std=c++1z"
 ```
 
-
 ## Requirements
 
   * arduino-cli
   * bash
 
-
 ## Install/remove
 
 Easy way is to clone [GetLibs][GetLibs] repo and run it's code.
-
 
 ## See also
 
@@ -80,9 +56,9 @@ Easy way is to clone [GetLibs][GetLibs] repo and run it's code.
 * [My other embedded C++ libraries][Embedded]
 * [My other repositories][Repos]
 
-[Example]: examples/me_RgbStripe/me_RgbStripe.ino
 [Interface]: src/me_RgbStripe.h
 [Implementation]: src/me_RgbStripe.cpp
+[Example]: examples/me_RgbStripe/me_RgbStripe.ino
 
 [GetLibs]: https://github.com/martin-eden/Embedded-Framework-GetLibs
 
