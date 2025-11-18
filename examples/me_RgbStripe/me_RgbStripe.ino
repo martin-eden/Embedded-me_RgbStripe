@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2025-11-12
+  Last mod.: 2025-11-18
 */
 
 #include <me_RgbStripe.h>
@@ -42,7 +42,7 @@ void RunTest()
   const TUint_2 DataMemSize = StripeLength * sizeof(me_RgbStripe::TColor);
 
   TUint_1 DataMem[DataMemSize];
-  const TAddressSegment DataSeg = { (TAddress) &DataMem, sizeof(DataMem) };
+  const TAddressSegment DataSeg = AsAddrSeg_M(DataMem);
 
   Console.Write("Output pin:");
   Console.Print(OutputPin);

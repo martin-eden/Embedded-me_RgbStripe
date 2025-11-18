@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2025-11-12
+  Last mod.: 2025-11-18
 */
 
 #include <me_RgbStripe.h>
@@ -16,7 +16,7 @@ const TUint_1 Stripe_Length = 60;
 const TUint_2 DataMemSize = Stripe_Length * sizeof(me_RgbStripe::TColor);
 
 TUint_1 DataMem[DataMemSize];
-const TAddressSegment DataSeg = { (TAddress) &DataMem, sizeof(DataMem) };
+const TAddressSegment DataSeg = AsAddrSeg_M(DataMem);
 
 me_RgbStripe::TRgbStripe Stripe;
 
